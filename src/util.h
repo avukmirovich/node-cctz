@@ -3,20 +3,14 @@
 
 #include <chrono>
 
-typedef std::chrono::duration<double, std::ratio<1>> d_seconds;
+using timepoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>;
 
-static std::chrono::system_clock::time_point toTimePoint(const double unixTimestamp) {
-	return std::chrono::system_clock::time_point(
-		std::chrono::duration_cast<std::chrono::system_clock::duration>(
-			d_seconds{unixTimestamp}
-		)
-	);
+static timepoint toTimePoint(long long unixTimestamp) {
+	return timepoint(std::chrono::seconds(unixTimestamp));
 }
 
-static int toUnixTimestamp(const std::chrono::system_clock::time_point& timepoint) {
-	return std::chrono::duration_cast<std::chrono::seconds>(
-		timepoint.time_since_epoch()
-	).count();
+static double toUnixTimestamp(const timepoint& tp) {
+	return tp.time_since_epoch().count();
 }
 
 #endif

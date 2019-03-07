@@ -180,7 +180,7 @@ test('TimeZone has name getter', t => {
 	t.is(new TimeZone('UTC').name, 'UTC');
 });
 
-test('tz shortcut workd', t => {
+test('tz shortcut works', t => {
 	t.throws(() => tz('unknown'), 'Failed to load time zone unknown');
 	t.is(tz('UTC').name, 'UTC');
 });
@@ -188,3 +188,16 @@ test('tz shortcut workd', t => {
 test('now shortcut works', t => {
 	t.is(now(), Math.floor(Date.now() / 1000));
 });
+
+test('supports timestamps beyond 2104 year', t => {
+	t.is(convert(new CivilTime(3004, 2, 25, 3, 4, 17), tz('UTC')), 32634587057);
+	t.is(convert(new CivilTime(5134, 8, 17, 17, 0, 59), tz('UTC')), 99865933259);
+});
+
+for (let i = 0; i < 60 * 60 * 24; i++) {
+	test(`seconds accuracy (${i})`, t => {
+		t.is(convert(new CivilTime(3004, 1, 1, 0, 0, i), tz('UTC')), 32629824000 + i);
+		t.is(convert(new CivilTime(3004, 2, 25, 3, 4, 17 + i), tz('UTC')), 32634587057 + i);
+		t.is(convert(new CivilTime(5134, 8, 17, 17, 0, 59 + i), tz('UTC')), 99865933259 + i);
+	});
+}

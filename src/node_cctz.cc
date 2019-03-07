@@ -76,7 +76,7 @@ NAN_METHOD(parse) {
 	std::string format = *Nan::Utf8String(info[0]);
 	std::string input = *Nan::Utf8String(info[1]);
 
-	std::chrono::system_clock::time_point tp;
+	timepoint tp;
 	bool parsed = cctz::parse(format, input, tz, &tp);
 
 	if (!parsed) {
